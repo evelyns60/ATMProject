@@ -5,6 +5,7 @@ public class ATM {
     public ATM() {
         transactionID = 1000;
     }
+
     Scanner scan = new Scanner(System.in);
 
     public void start() {
@@ -23,7 +24,7 @@ public class ATM {
         System.out.print("Now, please reenter your PIN number before gaining access to your accounts: ");
 
         boolean isPin = false;
-        while (isPin == false) {
+        while (!isPin) {
             int checkPIN = scan.nextInt();
             scan.nextLine();
             if (checkPIN == customer.getPIN()) {
@@ -51,6 +52,8 @@ public class ATM {
                 } else {
                     savingsAcc.addBalance(money);
                 }
+                transactionID++;
+                printReceipt(1, true);
             } else if (choice == 2) {
                 System.out.print("From which account are you withdrawing from? Type (1) for checking, (2) for savings: ");
                 int accountChoice = scan.nextInt();
@@ -121,16 +124,39 @@ public class ATM {
 
     public void withdraw(Account account) {
         int money = -1;
-        while ((money % 5 != 0 || money % 20 != 0) || money > account.getBalance()) {
+        while ((money % 5 != 0 || money % 20 != 0) && money <= account.getBalance()) {
             System.out.print("How much money are you withdrawing? ");
             money = scan.nextInt();
             scan.nextLine();
-            if (money % 5 != 0 && money % 20 != 0) {
+            if (money > account.getBalance()) {
+                System.out.println("ERROR: Insufficient Funds.");
+                printReceipt(2, false);
+            } else if (money % 5 != 0 && money % 20 != 0) {
                 System.out.println("This ATM can only withdraw $5 or $20 bills. Please enter a value that can be distributed among these bills. ");
-            } else if (money > account.getBalance()) {
-                System.out.println("ERROR: Insufficient Funds. Please try again.");
             }
+        }
+
+        if (!(money > account.getBalance())) {
+            int num20s = 0;
+            int num5s = 0;
+            boolean validNum = false;
+            while (!validNum) {
+                System.out.print("How many $20 bills do you want to receive? (if none, type 0)");
+                num20s = scan.nextInt();
+                scan.nextLine();
+                if (num20s * 20 > money) {
+                    System.out.println("This exceeds your withdrawing amount. Try again. ");
+                } else {
+                    validNum = true;
+                }
+            }
+            num5s = (money - (num20s * 20)) / 5;
+            System.out.println("Since you asked for " + num20s + " $20 bills, you will also receive " + num5s + " $5 bills.");
+            printReceipt(2, true);
         }
     }
 
+    public void printReceipt(int transactionType, boolean wasSuccessful) {
+
+    }
 }
