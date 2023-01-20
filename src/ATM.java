@@ -1,6 +1,8 @@
 import java.util.Scanner;
 public class ATM {
     private int transactionID;
+    private Account checkingAcc;
+    private Account savingsAcc;
 
     public ATM() {
         transactionID = 1000;
@@ -17,8 +19,8 @@ public class ATM {
         int PIN = scan.nextInt();
         scan.nextLine();
         Customer customer = new Customer(name, PIN);
-        Account savingsAcc = new Account("Savings Account", customer, 0.00);
-        Account checkingAcc = new Account("Checking Account", customer, 0.00);
+        savingsAcc = new Account("Savings Account", customer, 0.00);
+        checkingAcc = new Account("Checking Account", customer, 0.00);
 
         System.out.println("Your checking and savings accounts have been created, " + customer.getName());
         System.out.print("Now, please reenter your PIN number before gaining access to your accounts: ");
@@ -47,13 +49,14 @@ public class ATM {
                 System.out.print("Which account is this money being deposited in? Type (1) for checking, (2) for savings: ");
                 double accountChoice = scan.nextDouble();
                 scan.nextLine();
+                transactionID++;
                 if (accountChoice == 1) {
                     checkingAcc.addBalance(money);
+                    printReceipt(1, true, money, checkingAcc);
                 } else {
                     savingsAcc.addBalance(money);
+                    printReceipt(1, true, money, savingsAcc);
                 }
-                transactionID++;
-                printReceipt(1, true);
             } else if (choice == 2) {
                 System.out.print("From which account are you withdrawing from? Type (1) for checking, (2) for savings: ");
                 int accountChoice = scan.nextInt();
@@ -130,7 +133,7 @@ public class ATM {
             scan.nextLine();
             if (money > account.getBalance()) {
                 System.out.println("ERROR: Insufficient Funds.");
-                printReceipt(2, false);
+                printReceipt(1, false, 0, null);
             } else if (money % 5 != 0 && money % 20 != 0) {
                 System.out.println("This ATM can only withdraw $5 or $20 bills. Please enter a value that can be distributed among these bills. ");
             }
@@ -152,11 +155,32 @@ public class ATM {
             }
             num5s = (money - (num20s * 20)) / 5;
             System.out.println("Since you asked for " + num20s + " $20 bills, you will also receive " + num5s + " $5 bills.");
-            printReceipt(2, true);
+            printReceipt(2, true, money, account);
         }
     }
 
-    public void printReceipt(int transactionType, boolean wasSuccessful) {
+    public void printReceipt(int transactionType, boolean wasSuccessful, double money, Account account) {
+        System.out.println("Receipt:\n");
 
+        if (transactionType == 1){
+            System.out.println("$" + money + " deposited into " + account.getAccountName());
+        } else if (transactionType == 2) {
+            System.out.println("$" + money + " withdrawn from " + account.getAccountName());
+        } else if (transactionType == 3){
+            System.out.println("$" + money + "transferred from " );
+            if (account.getAccountName().equals("CheckingAccount")) {
+                System.out.println(savingsAcc.getAccountName() + " to " + checkingAcc.getAccountName());
+            } else {
+                System.out.println(checkingAcc.getAccountName() + " to " + savingsAcc.getAccountName());
+            }
+        } else {
+            System.out.println("changed PIN");
+        }
+
+        System.out.println("Current Checking Account Balance: " + checkingAcc.getBalance());
+        System.out.println("Current Savings Account Balance: " + savingsAcc.getBalance());
+        if (transactionType == 1 || transactionType == 2 || transactionType == 3) {
+            System.out.println("Transaction ID: " + transactionID);
+        }
     }
 }
