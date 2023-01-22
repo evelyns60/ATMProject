@@ -71,7 +71,7 @@ public class ATM {
                 System.out.println("Invalid option. Try again.");
             }
 
-            System.out.print("Would you like to do anything else? Yes (1) or No (2)");
+            System.out.print("Would you like to do anything else? Yes (1) or No (2) ");
             int answer = scan.nextInt();
             scan.nextLine();
             if (answer == 2) {
@@ -91,15 +91,15 @@ public class ATM {
     public void mainMenu() {
         System.out.println("---------------------------------------------------------------------------");
         System.out.println("Main Menu:");
-        System.out.println("Deposit Money (1)");
-        System.out.println("Withdraw Money (2)");
-        System.out.println("Transfer Money (3)");
-        System.out.println("Get Account Balance (4)");
-        System.out.println("Change your PIN Number (5)");
-        System.out.println("Exit (6)");
+        System.out.println("• Deposit Money (1)");
+        System.out.println("• Withdraw Money (2)");
+        System.out.println("• Transfer Money (3)");
+        System.out.println("• Get Account Balance (4)");
+        System.out.println("• Change your PIN Number (5)");
+        System.out.println("• Exit (6)");
     }
 
-    public void enterPIN() {
+    private void enterPIN() {
         System.out.print("Please enter your PIN number to proceed: ");
         int num = scan.nextInt();
         scan.nextLine();
@@ -111,7 +111,7 @@ public class ATM {
         }
     }
 
-    public void deposit() {
+    private void deposit() {
         System.out.print("How much money will you be depositing? ");
         double money = scan.nextDouble();
         scan.nextLine();
@@ -128,7 +128,7 @@ public class ATM {
         }
     }
 
-    public void withdraw(Account account) {
+    private void withdraw(Account account) {
         int money = -1;
         while ((money % 5 != 0 && money % 20 != 0) && money <= account.getBalance()) {
             System.out.print("How much money are you withdrawing? ");
@@ -163,7 +163,7 @@ public class ATM {
         }
     }
 
-    public void transfer() {
+    private void transfer() {
         System.out.print("From which account are you transferring from? Type (1) for checking, (2) for savings: ");
         int accountChoice = scan.nextInt();
         scan.nextLine();
@@ -194,7 +194,7 @@ public class ATM {
 
     }
 
-    public void printReceipt(int transactionType, boolean wasSuccessful, double money, Account account) {
+    private void printReceipt(int transactionType, boolean wasSuccessful, double money, Account account) {
         System.out.println("\nReceipt:\n");
 
         if (wasSuccessful) {
@@ -203,7 +203,7 @@ public class ATM {
             } else if (transactionType == 2) {
                 System.out.println("$" + money + " withdrawn from " + account.getAccountName());
             } else if (transactionType == 3){
-                System.out.println("$" + money + "transferred from " );
+                System.out.println("$" + money + " transferred from " );
                 if (account.getAccountName().equals("CheckingAccount")) {
                     System.out.println(savingsAcc.getAccountName() + " to " + checkingAcc.getAccountName());
                 } else {
