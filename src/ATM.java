@@ -85,11 +85,11 @@ public class ATM {
             }
         }
 
-        System.out.println("Thank you for using this machine, " + customer.getName() + ". Have a great day!");
+        System.out.println("\nThank you for using this machine, " + customer.getName() + ". Have a great day!");
     }
 
     public void mainMenu() {
-        System.out.println("---------------------------------------------------------------------------");
+        borderPattern();
         System.out.println("Main Menu:");
         System.out.println(Customer.getBLUE() + "• Deposit Money (1)");
         System.out.println(Customer.getBRIGHTBLUE() + "• Withdraw Money (2)");
@@ -112,7 +112,7 @@ public class ATM {
     }
 
     private void deposit() {
-        System.out.print("How much money will you be depositing? ");
+        System.out.print("\nHow much money will you be depositing? ");
         double money = scan.nextDouble();
         scan.nextLine();
         System.out.print("Which account is this money being deposited in? Type (1) for checking, (2) for savings: ");
@@ -131,7 +131,7 @@ public class ATM {
     private void withdraw(Account account) {
         int money = -1;
         while ((money % 5 != 0 && money % 20 != 0) && money <= account.getBalance()) {
-            System.out.print("How much money are you withdrawing? ");
+            System.out.print("\nHow much money are you withdrawing? ");
             money = scan.nextInt();
             scan.nextLine();
             if (money > account.getBalance()) {
@@ -147,24 +147,24 @@ public class ATM {
             int num5s = 0;
             boolean validNum = false;
             while (!validNum) {
-                System.out.print("How many $20 bills do you want to receive? (if none, type 0)");
+                System.out.print("How many $20 bills do you want to receive? (if none, type 0): ");
                 num20s = scan.nextInt();
                 scan.nextLine();
                 if (num20s * 20 > money) {
-                    System.out.println("This exceeds your withdrawing amount. Try again. ");
+                    System.out.println(Customer.getRED() + "This exceeds your withdrawing amount. Try again. " + Customer.getWHITE());
                 } else {
                     validNum = true;
                 }
                 account.removeBalance(money);
             }
             num5s = (money - (num20s * 20)) / 5;
-            System.out.println("Since you asked for " + num20s + " $20 bills, you will also receive " + num5s + " $5 bills.");
+            System.out.println("\nSince you asked for " + Customer.getBROWN() + num20s +  " $20 bills " + Customer.getWHITE() + "), you will also receive " + Customer.getBROWN() + num5s + " $5 bills" + Customer.getWHITE() + ".");
             printReceipt(2, true, money, account);
         }
     }
 
     private void transfer() {
-        System.out.print("From which account are you transferring from? Type (1) for checking, (2) for savings: ");
+        System.out.print("\nFrom which account are you transferring from? Type (1) for checking, (2) for savings: ");
         int accountChoice = scan.nextInt();
         scan.nextLine();
         int money = 0;
@@ -177,7 +177,7 @@ public class ATM {
                 savingsAcc.addBalance(money);
                 printReceipt(3, true, money, checkingAcc);
             } else {
-                System.out.println("ERROR: Insufficient funds.");
+                System.out.println(Customer.getRED() + "ERROR: Insufficient funds." + Customer.getWHITE());
                 printReceipt(3, false, 0, null);
             }
         } else {
@@ -186,7 +186,7 @@ public class ATM {
                 checkingAcc.addBalance(money);
                 printReceipt(3, true, money, savingsAcc);
             } else {
-                System.out.println("ERROR: Insufficient funds.");
+                System.out.println(Customer.getRED() + "ERROR: Insufficient funds." + Customer.getWHITE());
                 printReceipt(3, false, 0, null);
             }
 
@@ -195,7 +195,8 @@ public class ATM {
     }
 
     private void printReceipt(int transactionType, boolean wasSuccessful, double money, Account account) {
-        System.out.println("---------------------------------------------------------------------------");
+        System.out.println();
+        borderPattern();
         System.out.println(Customer.getBROWN() + "Receipt:\n");
 
         if (wasSuccessful) {
@@ -205,10 +206,10 @@ public class ATM {
                 System.out.println("• $" + money + " withdrawn from " + account.getAccountName());
             } else if (transactionType == 3){
                 System.out.print("• $" + money + " transferred from " );
-                if (account.getAccountName().equals("CheckingAccount")) {
-                    System.out.println(savingsAcc.getAccountName() + " to " + checkingAcc.getAccountName());
-                } else {
+                if (account.getAccountName().equals("Checking Account")) {
                     System.out.println(checkingAcc.getAccountName() + " to " + savingsAcc.getAccountName());
+                } else {
+                    System.out.println(savingsAcc.getAccountName() + " to " + checkingAcc.getAccountName());
                 }
             } else {
                 System.out.println("• PIN changed");
@@ -226,6 +227,18 @@ public class ATM {
         } else if (!wasSuccessful) {
             System.out.println("• Transaction Status: " + Customer.getRED() + "Not Successful");
         }
-        System.out.println(Customer.getWHITE() + "---------------------------------------------------------------------------");
+        borderPattern();
+    }
+
+    private void borderPattern() {
+        System.out.print(Customer.getBROWN());
+        for (int i = 0; i < 40; i ++) {
+            if (!(i % 2 == 0)) {
+                System.out.print("*");
+            } else {
+                System.out.print("-");
+            }
+        }
+        System.out.println(Customer.getWHITE());
     }
 }
