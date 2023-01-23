@@ -12,7 +12,7 @@ public class ATM {
     Scanner scan = new Scanner(System.in);
 
     public void start() {
-        System.out.println("Why, hello. Welcome to the ATM. ");
+        System.out.println(Customer.getWHITE() + "\nWhy, hello. Welcome to the ATM. ");
         System.out.println("We're going to need some information before we start, so follow along.");
         System.out.print("\nType your name: ");
         String name = scan.nextLine();
@@ -23,7 +23,7 @@ public class ATM {
         savingsAcc = new Account("Savings Account", customer, 0.00);
         checkingAcc = new Account("Checking Account", customer, 0.00);
 
-        System.out.println("Your checking and savings accounts have been created, " + customer.getName());
+        System.out.println("\nYour checking and savings accounts have been created, " + customer.getName());
         System.out.print("Now, please reenter your PIN number before gaining access to your accounts: ");
 
         boolean isPin = false;
@@ -33,11 +33,11 @@ public class ATM {
             if (checkPIN == customer.getPIN()) {
                 isPin = true;
             } else {
-                System.out.print("Incorrect! please try again: ");
+                System.out.print(Customer.getRED() + "Incorrect! please try again: " + Customer.getWHITE());
             }
         }
 
-        System.out.println("Welcome!");
+        System.out.println("\nWelcome, " + customer.getName() + "!");
         enterPIN();
         mainMenu();
         System.out.print("Choose an option: ");
@@ -59,8 +59,8 @@ public class ATM {
             } else if (choice == 3) {
                 transfer();
             } else if (choice == 4) {
-                System.out.println("Checking Account Balance: $" + checkingAcc.getBalance());
-                System.out.println("Savings Account Balance: $" + savingsAcc.getBalance());
+                System.out.println(Customer.getBROWN() + "\nChecking Account Balance: $" + Customer.getWHITE() +  checkingAcc.getBalance());
+                System.out.println(Customer.getBROWN() + "Savings Account Balance: $" + Customer.getWHITE() + savingsAcc.getBalance() + "\n");
             } else if (choice == 5) {
                 System.out.print("Type in what you want your new PIN to be: ");
                 int newPIN = scan.nextInt();
@@ -91,12 +91,12 @@ public class ATM {
     public void mainMenu() {
         System.out.println("---------------------------------------------------------------------------");
         System.out.println("Main Menu:");
-        System.out.println("• Deposit Money (1)");
-        System.out.println("• Withdraw Money (2)");
-        System.out.println("• Transfer Money (3)");
-        System.out.println("• Get Account Balance (4)");
-        System.out.println("• Change your PIN Number (5)");
-        System.out.println("• Exit (6)");
+        System.out.println(Customer.getBLUE() + "• Deposit Money (1)");
+        System.out.println(Customer.getBRIGHTBLUE() + "• Withdraw Money (2)");
+        System.out.println(Customer.getBLUE() + "• Transfer Money (3)");
+        System.out.println(Customer.getBRIGHTBLUE() + "• Get Account Balance (4)");
+        System.out.println(Customer.getBLUE() + "• Change your PIN Number (5)");
+        System.out.println(Customer.getBRIGHTBLUE() + "• Exit (6)" + Customer.getWHITE());
     }
 
     private void enterPIN() {
@@ -105,7 +105,7 @@ public class ATM {
         scan.nextLine();
 
         while (num != customer.getPIN()) {
-            System.out.print("Incorrect. Please try again: ");
+            System.out.print(Customer.getRED() + "Incorrect. Please try again: " + Customer.getWHITE());
             num = scan.nextInt();
             scan.nextLine();
         }
@@ -135,10 +135,10 @@ public class ATM {
             money = scan.nextInt();
             scan.nextLine();
             if (money > account.getBalance()) {
-                System.out.println("ERROR: Insufficient Funds.");
+                System.out.println(Customer.getRED() + "ERROR: Insufficient Funds." + Customer.getWHITE());
                 printReceipt(1, false, 0, null);
             } else if (money % 5 != 0 && money % 20 != 0) {
-                System.out.println("This ATM can only withdraw $5 or $20 bills. Please enter a value that can be distributed among these bills. ");
+                System.out.println("This ATM can only withdraw " + Customer.getRED() + "$5 or $20 bills" + Customer.getWHITE() + ". Please enter a value that can be distributed among these bills. ");
             }
         }
 
@@ -195,32 +195,37 @@ public class ATM {
     }
 
     private void printReceipt(int transactionType, boolean wasSuccessful, double money, Account account) {
-        System.out.println("\nReceipt:\n");
+        System.out.println("---------------------------------------------------------------------------");
+        System.out.println(Customer.getBROWN() + "Receipt:\n");
 
         if (wasSuccessful) {
             if (transactionType == 1){
-                System.out.println("$" + money + " deposited into " + account.getAccountName());
+                System.out.println("• $" + money + " deposited into " + account.getAccountName());
             } else if (transactionType == 2) {
-                System.out.println("$" + money + " withdrawn from " + account.getAccountName());
+                System.out.println("• $" + money + " withdrawn from " + account.getAccountName());
             } else if (transactionType == 3){
-                System.out.println("$" + money + " transferred from " );
+                System.out.print("• $" + money + " transferred from " );
                 if (account.getAccountName().equals("CheckingAccount")) {
                     System.out.println(savingsAcc.getAccountName() + " to " + checkingAcc.getAccountName());
                 } else {
                     System.out.println(checkingAcc.getAccountName() + " to " + savingsAcc.getAccountName());
                 }
             } else {
-                System.out.println("PIN changed");
+                System.out.println("• PIN changed");
             }
         } else {
-            System.out.println("Transaction failed due to insufficient funds.");
+            System.out.println("• Transaction failed due to insufficient funds.");
+            System.out.println();
         }
 
         System.out.println("Current Checking Account Balance: " + checkingAcc.getBalance());
         System.out.println("Current Savings Account Balance: " + savingsAcc.getBalance());
-        if (transactionType == 1 || transactionType == 2 || transactionType == 3) {
-            System.out.println("Transaction Status: Successful");
-            System.out.println("Transaction ID: " + transactionID);
+        if ((transactionType == 1 || transactionType == 2 || transactionType == 3) && wasSuccessful) {
+            System.out.println("• Transaction Status: " + Customer.getPURPLE() + "Successful" + Customer.getBROWN());
+            System.out.println("• Transaction ID: " + transactionID);
+        } else if (!wasSuccessful) {
+            System.out.println("• Transaction Status: " + Customer.getRED() + "Not Successful");
         }
+        System.out.println(Customer.getWHITE() + "---------------------------------------------------------------------------");
     }
 }
