@@ -3,7 +3,6 @@ public class Customer {
     private static final String RED = "\u001B[31m";
     private static final String BROWN = "\u001B[33m";
     private static final String WHITE = "\u001B[37m";
-    private static final String BLACK = "\u001B[30m";
     private static final String CYAN = "\033[0;34m";
     private static final String BRIGHT_BLUE = "\033[0;94m";
     private static final String PURPLE = "\033[0;35m";
@@ -38,5 +37,4 @@ public class Customer {
     public static String getPURPLE() {return PURPLE; }
 
     public static String getBROWN() {return BROWN;}
-
 }
